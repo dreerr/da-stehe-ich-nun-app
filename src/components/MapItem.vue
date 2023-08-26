@@ -1,0 +1,230 @@
+<script setup>
+import { useMapStore } from '@/stores/map'
+import { useRoute, RouterLink } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import Plyr from 'plyr'
+import 'plyr/dist/plyr.css'
+const mapStore = useMapStore()
+const route = useRoute()
+const item = ref(null)
+item.value = mapStore.getItemById(parseInt(route.params.id))
+const curImg = ref(0)
+const nextImage = () => {
+  curImg.value = (curImg.value + 1) % item.value.properties.images.length
+}
+
+const player = ref(null)
+onMounted(() => {
+  if (player.value) {
+    new Plyr(player.value, {
+      controls: ['play-large', 'play', 'mute', 'volume']
+    })
+  }
+})
+</script>
+
+<template>
+  <div class="item">
+    <h1>HIER STEH ICH NUN...</h1>
+    <RouterLink class="close" to="/">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <g id="close">
+          <path
+            id="x"
+            d="M18.717 6.697l-1.414-1.414-5.303 5.303-5.303-5.303-1.414 1.414 5.303 5.303-5.303 5.303 1.414 1.414 5.303-5.303 5.303 5.303 1.414-1.414-5.303-5.303z"
+          />
+        </g>
+      </svg>
+    </RouterLink>
+    <div class="story">
+      <div class="inner">
+        <span v-html="item.properties.completion.message.content"></span>
+        <ul>
+          <li v-for="[key, value] in item.properties.specs" :key="key">
+            <strong>{{ key }}:</strong> <span v-html="value"></span>
+          </li>
+        </ul>
+      </div>
+      <div class="audio">
+        <audio ref="player" controls autoplay>
+          <source :src="'/audio/' + item.properties.OBJECTID + '.mp3'" type="audio/mp3" />
+        </audio>
+      </div>
+    </div>
+    <div class="images" @click="nextImage()">
+      <div class="inner moon">
+        <!-- <img class="cover" :src="'/' + img" /> -->
+        <img
+          :src="'/images/' + img"
+          v-for="(img, idx) in item.properties.images"
+          :key="img"
+          :class="{ active: idx === curImg }"
+        />
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+@import '@/assets/cssgram.min.css';
+
+h1 {
+  position: absolute;
+  left: 0.5em;
+  top: 0.6em;
+  z-index: 1;
+  color: white;
+  font-family: 'Film Noir';
+  font-size: 2.5em;
+  font-style: italic;
+  transform: rotate(-5deg);
+  pointer-events: none;
+  padding: 0.5em 1em;
+  margin: -1em;
+  background-color: rgb(36, 36, 36);
+}
+
+.images {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: var(--ratio);
+  bottom: 0;
+  z-index: 0;
+}
+
+.story {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: calc(100% - var(--ratio));
+}
+@media (max-width: 700px) and (max-aspect-ratio: 1/1) {
+  .images {
+    left: 0;
+    right: 0;
+    top: calc(100% - var(--ratio));
+    bottom: 0;
+  }
+
+  .story {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: var(--ratio);
+  }
+}
+
+@media (min-aspect-ratio: 1/1) {
+  .images {
+    left: var(--ratio);
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+  .story {
+    left: 0;
+    right: calc(100% - var(--ratio));
+    top: 0;
+    bottom: 0;
+  }
+}
+
+.story ul {
+  margin-top: 3em;
+  font-size: 1rem;
+  opacity: 0.5;
+}
+.item {
+  overflow: hidden;
+  --ratio: 38.2%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.story .inner {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 50px;
+  font-size: 1.5em;
+  line-height: 140%;
+  padding: 5em 2em 6em;
+  overflow-x: scroll;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgba(255, 255, 255, 1) 6em,
+    rgba(255, 255, 255, 1) calc(100% - 6em),
+    transparent 100%
+  );
+}
+
+.story .inner::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.audio {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  margin-left: -100px;
+  z-index: 12;
+  --plyr-color-main: rgb(36, 36, 36);
+}
+
+.images .inner {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('');
+  background-size: cover;
+  background-position: center center;
+  /* filter: blur(10px); */
+  pointer-events: none;
+}
+
+.images img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 500ms;
+}
+.images img.active {
+  opacity: 1;
+}
+
+.images:hover img {
+  /* object-fit: contain; */
+}
+
+.noise {
+  background-image: url("data:image/svg+xml,%3C!-- svg: first layer --%3E%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='4' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.close svg {
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  right: 0.5em;
+  top: 0.5em;
+  z-index: 1;
+}
+
+.close svg path {
+  fill: var(--vt-c-black);
+}
+</style>
