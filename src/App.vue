@@ -1,15 +1,10 @@
 <script setup>
 import { RouterView } from 'vue-router'
+import TheHeader from './components/TheHeader.vue'
 </script>
 
 <template>
-  <!-- <header>
-    <nav>
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/about">About</RouterLink>
-    </nav>
-  </header> -->
-
+  <the-header />
   <router-view v-slot="{ Component }">
     <keep-alive exclude="MapItemView">
       <component :is="Component" />

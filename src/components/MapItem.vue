@@ -9,10 +9,10 @@ const route = useRoute()
 const item = ref(null)
 item.value = mapStore.getItemById(parseInt(route.params.id))
 const curImg = ref(0)
+const doContain = ref(false)
 const nextImage = () => {
   curImg.value = (curImg.value + 1) % item.value.properties.images.length
 }
-
 const player = ref(null)
 onMounted(() => {
   if (player.value) {
@@ -20,12 +20,12 @@ onMounted(() => {
       controls: ['play-large', 'play', 'mute', 'volume']
     })
   }
+  setInterval(() => nextImage(), 5000)
 })
 </script>
 
 <template>
   <div class="item">
-    <h1>HIER STEH ICH NUN...</h1>
     <RouterLink class="close" to="/">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
         <g id="close">
@@ -39,11 +39,15 @@ onMounted(() => {
     <div class="story">
       <div class="inner">
         <span v-html="item.properties.completion.message.content"></span>
-        <ul>
-          <li v-for="[key, value] in item.properties.specs" :key="key">
-            <strong>{{ key }}:</strong> <span v-html="value"></span>
-          </li>
-        </ul>
+        <details>
+          <summary>Angaben der Datenbank</summary>
+
+          <ul>
+            <li v-for="[key, value] in item.properties.specs" :key="key">
+              <em>{{ key }}:</em> <span v-html="value"></span>
+            </li>
+          </ul>
+        </details>
       </div>
       <div class="audio">
         <audio ref="player" controls autoplay>
@@ -51,7 +55,7 @@ onMounted(() => {
         </audio>
       </div>
     </div>
-    <div class="images" @click="nextImage()">
+    <div class="images" @click="doContain = !doContain" :class="{ contain: doContain }">
       <div class="inner moon">
         <!-- <img class="cover" :src="'/' + img" /> -->
         <img
@@ -67,22 +71,6 @@ onMounted(() => {
 
 <style scoped>
 @import '@/assets/cssgram.min.css';
-
-h1 {
-  position: absolute;
-  left: 0.5em;
-  top: 0.6em;
-  z-index: 1;
-  color: white;
-  font-family: 'Film Noir';
-  font-size: 2.5em;
-  font-style: italic;
-  transform: rotate(-5deg);
-  pointer-events: none;
-  padding: 0.5em 1em;
-  margin: -1em;
-  background-color: rgb(36, 36, 36);
-}
 
 .images {
   position: absolute;
@@ -104,7 +92,7 @@ h1 {
   .images {
     left: 0;
     right: 0;
-    top: calc(100% - var(--ratio));
+    top: 50%;
     bottom: 0;
   }
 
@@ -112,7 +100,7 @@ h1 {
     left: 0;
     right: 0;
     top: 0;
-    bottom: var(--ratio);
+    bottom: 50%;
   }
 }
 
@@ -131,11 +119,17 @@ h1 {
   }
 }
 
-.story ul {
+details {
   margin-top: 3em;
   font-size: 1rem;
-  opacity: 0.5;
+  line-height: 1.3;
+  /* opacity: 0.5; */
 }
+
+details summary {
+  cursor: pointer;
+}
+
 .item {
   overflow: hidden;
   --ratio: 38.2%;
@@ -153,7 +147,7 @@ h1 {
   top: 0;
   bottom: 50px;
   font-size: 1.5em;
-  line-height: 140%;
+  line-height: 1.3;
   padding: 5em 2em 6em;
   overflow-x: scroll;
   mask-image: linear-gradient(
@@ -163,6 +157,13 @@ h1 {
     rgba(255, 255, 255, 1) calc(100% - 6em),
     transparent 100%
   );
+}
+
+@media (max-width: 450px) {
+  .story .inner {
+    padding: 5em 1em 6em;
+    font-size: 1.2em;
+  }
 }
 
 .story .inner::-webkit-scrollbar {
@@ -176,7 +177,9 @@ h1 {
   left: 50%;
   margin-left: -100px;
   z-index: 12;
-  --plyr-color-main: rgb(36, 36, 36);
+  --plyr-audio-controls-background: var(--color-background);
+  --plyr-audio-control-color: var(--color-heading);
+  --plyr-color-main: var(--color-text);
 }
 
 .images .inner {
@@ -186,10 +189,6 @@ h1 {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('');
-  background-size: cover;
-  background-position: center center;
-  /* filter: blur(10px); */
   pointer-events: none;
 }
 
@@ -200,6 +199,7 @@ h1 {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 30%;
   opacity: 0;
   transition: opacity 500ms;
 }
@@ -207,8 +207,8 @@ h1 {
   opacity: 1;
 }
 
-.images:hover img {
-  /* object-fit: contain; */
+.images.contain img {
+  object-fit: contain;
 }
 
 .noise {
@@ -224,7 +224,8 @@ h1 {
   z-index: 1;
 }
 
-.close svg path {
-  fill: var(--vt-c-black);
+.close svg {
+  fill: var(--color-heading);
+  filter: drop-shadow(0 0 7px var(--color-background));
 }
 </style>

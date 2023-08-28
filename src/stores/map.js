@@ -4,14 +4,14 @@ import db from '@/assets/db.json'
 const types = [...new Set(db.features.map((feature) => feature.properties.TYP))]
 
 const icons = [
-  'library',
-  null,
-  'monument',
-  'religious-christian',
-  'swimming',
-  'aquarium',
-  'art-gallery',
-  'cemetery'
+  'cemetery', // "Gedenktafeln"
+  null, // undefined
+  'monument', // "Denkmäler"
+  'religious-christian', // "Sakrale Kleindenkmäler"
+  'swimming', // "Brunnen"
+  'place-of-worship', // "Profanplastiken/Kunst am Bau freistehend"
+  'art-gallery', // "Kunst am Bau wandgebunden"
+  'cemetery' // "Grabmäler/Grabhaine"
 ]
 
 const fields = [
@@ -28,6 +28,7 @@ const fields = [
   ['GESCHICHTE', 'Geschichte'],
   ['LITERATURQUELLEN', 'Literaturquellen']
 ]
+console.log(types)
 
 db.features = db.features.map((feature) => {
   // add icons
