@@ -1,14 +1,16 @@
 <script setup>
 import { ref } from 'vue'
-import { useRoute, RouterLink } from 'vue-router'
-const route = useRoute()
+import { RouterLink } from 'vue-router'
 const isActive = ref(false)
+const clearLocalStorage = () => {
+  localStorage.setItem('visitedIds', '[]')
+}
 </script>
 
 <template>
   <header :class="{ open: isActive }">
     <RouterLink to="/">
-      <h1 :class="{ solid: route.name === 'item' }">DA STEHE ICH NUN...</h1>
+      <h1>DA STEHE ICH NUN...</h1>
     </RouterLink>
     <div class="info" @click="isActive = !isActive">
       <svg
@@ -59,6 +61,22 @@ const isActive = ref(false)
         sich eine narrative Darstellung der Stadt und ihrer Kunstwerke, die Wien in neuem Licht
         erscheinen lässt und mittels alternativer Erzählformen für alle zugänglich macht.
       </p>
+      <p>
+        Dieses Projekt ist Teil von Vienna's Urban Art (Paraflows / Günther Friesinger & Judith
+        Fegerl) und wurde finanziert durch »Kunst und Kultur im digitalen Raum - Call 2021« von
+        BMKÖS und Stadt Wien, MA7.
+      </p>
+      <p>
+        Originaldaten der Kunstwerke vom Magistrat Wien - Magistratsabteilung 7 - Kultur / Standorte
+        von Denkmälern, Kleindenkmälern, Gedenktafeln, Brunnen.
+        <a
+          href="https://www.data.gv.at/katalog/dataset/stadt-wien_kunstwerkeimffentlichenraumwien"
+          target="_blank"
+          >Eintrag auf data.gv.at</a
+        >
+      </p>
+      <p><a href="https://julian.palacz.at" target="_blank">julian.palacz.at</a></p>
+      <p><small @click="clearLocalStorage()">Rote Punkte entfernen</small></p>
     </section>
   </header>
   <div v-if="isActive" class="shadow" @click="isActive = false"></div>
@@ -143,6 +161,10 @@ section {
   overflow-y: scroll;
   p + p {
     margin-top: 1.2em;
+  }
+  a {
+    text-decoration: underline;
+    color: var(--color-background);
   }
 }
 

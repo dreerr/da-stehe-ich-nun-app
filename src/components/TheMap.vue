@@ -13,7 +13,6 @@ let map = null
 let visitedIds = JSON.parse(localStorage.getItem('visitedIds')) || []
 
 console.log(visitedIds)
-// let lastPosition = null
 mapboxgl.accessToken =
   'pk.eyJ1IjoiZHJlZXJyIiwiYSI6ImNsZXB6MDhwMzA5ZWYzc3BoczQxMGRiaTYifQ.Slh2tayWO19KkBCqXtFY_g'
 onMounted(() => {
@@ -108,8 +107,8 @@ onActivated(() => {
     // geolocate.on('trackuserlocationend', () => {
     //   console.log('A trackuserlocationend event has occurred.')
     // })
-    geolocate.on('geolocate', (e) => {
-      e.preventDefault()
+    geolocate.on('geolocate', () => {
+      // e.preventDefault()
       // lastPosition = [e.coords.longitude, e.coords.latitude]
       // const nearbyIDs = db.features
       //   .filter((feature) => distance(feature.geometry.coordinates, lastPosition) < 1)

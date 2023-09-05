@@ -1,6 +1,6 @@
 {
-  "name": "da-stehe-ich-nun",
-  "version": "0.0.0",
+  "name": "da-stehe-ich-nun-app",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -8,7 +8,8 @@
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/",
-    "upload": "rsync -zav --exclude '.htaccess' dist/ easyname:html/da-stehe-ich-nun/"
+    "upload": "rsync -zav --exclude '.htaccess' --exclude 'audio' --exclude 'images' dist/ easyname:html/da-stehe-ich-nun/",
+    "upload-all": "rsync -zav --exclude '.htaccess' dist/ easyname:html/da-stehe-ich-nun/"
   },
   "dependencies": {
     "@turf/turf": "^6.5.0",

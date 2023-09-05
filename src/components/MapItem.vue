@@ -14,6 +14,7 @@ const nextImage = () => {
   curImg.value = (curImg.value + 1) % item.value.properties.images.length
 }
 const player = ref(null)
+const story_inner = ref(null)
 onMounted(() => {
   if (player.value) {
     new Plyr(player.value, {
@@ -37,7 +38,7 @@ onMounted(() => {
       </svg>
     </RouterLink>
     <div class="story">
-      <div class="inner">
+      <div class="inner" ref="story_inner">
         <span v-html="item.properties.completion.message.content"></span>
         <details>
           <summary>Angaben der Datenbank</summary>
@@ -69,7 +70,7 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 @import '@/assets/cssgram.min.css';
 
 .images {
@@ -124,6 +125,9 @@ details {
   font-size: 1rem;
   line-height: 1.3;
   /* opacity: 0.5; */
+  &:deep(a) {
+    color: inherit;
+  }
 }
 
 details summary {
@@ -209,6 +213,7 @@ details summary {
 
 .images.contain img {
   object-fit: contain;
+  object-position: center center;
 }
 
 .noise {
