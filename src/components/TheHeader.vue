@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router'
 const isActive = ref(false)
 const clearLocalStorage = () => {
   localStorage.setItem('visitedIds', '[]')
+  location.reload()
 }
 </script>
 
@@ -76,7 +77,7 @@ const clearLocalStorage = () => {
         >
       </p>
       <p><a href="https://julian.palacz.at" target="_blank">julian.palacz.at</a></p>
-      <p><small @click="clearLocalStorage()">Rote Punkte entfernen</small></p>
+      <p><small @click="clearLocalStorage()">Tatorte vergessen und rote Punkte entfernen</small></p>
     </section>
   </header>
   <div v-if="isActive" class="shadow" @click="isActive = false"></div>
@@ -165,6 +166,9 @@ section {
   a {
     text-decoration: underline;
     color: var(--color-background);
+  }
+  small {
+    opacity: 0.7;
   }
 }
 
