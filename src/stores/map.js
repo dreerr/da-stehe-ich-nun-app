@@ -1,7 +1,4 @@
 import { defineStore } from 'pinia'
-import db from '@/assets/db.json'
-
-const types = [...new Set(db.features.map((feature) => feature.properties.TYP))]
 
 const icons = [
   'cemetery', // "Gedenktafeln"
@@ -28,32 +25,45 @@ const fields = [
   ['GESCHICHTE', 'Geschichte'],
   ['LITERATURQUELLEN', 'Literaturquellen']
 ]
-console.log(types)
-
-db.features = db.features.map((feature) => {
-  // add icons
-  let typeIndex = types.indexOf(feature.properties.TYP)
-  feature.properties.icon = icons[typeIndex]
-  feature.properties.completion.message.content =
-    feature.properties.completion.message.content.replace('\n', '<br>')
-  // create specs
-  let specs = fields
-    .filter(([field]) => feature.properties[field] !== null)
-    .map(([field, fieldTitle]) => [fieldTitle, feature.properties[field]])
-
-  specs.push([
-    'Mehr Informationen unter',
-    `<a href="https://www.wien.gv.at/kulturportal/public/identifyKunstwerk.aspx?FeatureByID=${feature.properties.ID}&FeatureClass=kunstwerk" target="_blank">wien.gv.at</a>`
-  ])
-  feature.properties.specs = specs
-  return feature
-})
 
 export const useMapStore = defineStore('map', {
+  state: () => ({
+    db: null
+  }),
+  actions: {
+    async loadDatabase() {
+      if (this.db !== null) return
+      const json = await import('@/assets/db.json')
+      const types = [...new Set(json.features.map((feature) => feature.properties.TYP))]
+      const features = json.features.map((feature) => {
+        // add icons
+        let typeIndex = types.indexOf(feature.properties.TYP)
+        feature.properties.icon = icons[typeIndex]
+        feature.properties.completion.message.content =
+          feature.properties.completion.message.content.replace('\n', '<br>')
+        // create specs
+        let specs = fields
+          .filter(([field]) => feature.properties[field] !== null)
+          .map(([field, fieldTitle]) => [fieldTitle, feature.properties[field]])
+
+        specs.push([
+          'Mehr Informationen unter',
+          `<a href="https://www.wien.gv.at/kulturportal/public/identifyKunstwerk.aspx?FeatureByID=${feature.properties.ID}&FeatureClass=kunstwerk" target="_blank">wien.gv.at</a>`
+        ])
+        feature.properties.specs = specs
+        return feature
+      })
+      // await new Promise((r) => setTimeout(r, 2000))
+      this.db = { ...json, features }
+    }
+  },
   getters: {
-    db: () => db,
     getItemById: (state) => {
-      return (id) => state.db.features.find((element) => element.properties.OBJECTID === id)
+      return async (id) => {
+        await state.loadDatabase()
+        const item = state.db.features.find((element) => element.properties.OBJECTID === id)
+        return item
+      }
     }
   }
 })

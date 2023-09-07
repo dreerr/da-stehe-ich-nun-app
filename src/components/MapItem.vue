@@ -1,13 +1,12 @@
 <script setup>
 import { useMapStore } from '@/stores/map'
 import { useRoute, RouterLink } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import Plyr from 'plyr'
 import 'plyr/dist/plyr.css'
 const mapStore = useMapStore()
 const route = useRoute()
 const item = ref(null)
-item.value = mapStore.getItemById(parseInt(route.params.id))
 const curImg = ref(0)
 const doContain = ref(false)
 const nextImage = () => {
@@ -15,18 +14,19 @@ const nextImage = () => {
 }
 const player = ref(null)
 const story_inner = ref(null)
-onMounted(() => {
-  if (player.value) {
+onMounted(async () => {
+  item.value = await mapStore.getItemById(parseInt(route.params.id))
+  nextTick(() => {
     new Plyr(player.value, {
       controls: ['play-large', 'play', 'mute', 'volume']
     })
-  }
+  })
   setInterval(() => nextImage(), 5000)
 })
 </script>
 
 <template>
-  <div class="item">
+  <div class="item" v-if="item">
     <RouterLink class="close" to="/">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
         <g id="close">
@@ -71,7 +71,7 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-@import '@/assets/cssgram.min.css';
+@import '@/assets/cssgram.moon.min.css';
 
 .images {
   position: absolute;

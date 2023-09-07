@@ -1,14 +1,12 @@
 <script setup>
 import 'mapbox-gl/dist/mapbox-gl.css'
 import mapboxgl from 'mapbox-gl'
-// import distance from '@turf/distance'
 import { useMapStore } from '@/stores/map'
 import { onActivated, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const mapStore = useMapStore()
-const db = mapStore.db
 let map = null
 let visitedIds = JSON.parse(localStorage.getItem('visitedIds')) || []
 
@@ -17,13 +15,19 @@ mapboxgl.accessToken =
   'pk.eyJ1IjoiZHJlZXJyIiwiYSI6ImNsZXB6MDhwMzA5ZWYzc3BoczQxMGRiaTYifQ.Slh2tayWO19KkBCqXtFY_g'
 onMounted(() => {
   console.log('onMounted')
+  main()
 })
-onActivated(() => {
+onActivated(async () => {
   console.log('onActivated')
+  main()
+})
+const main = async () => {
   if (map !== null) {
+    console.log('map already initialized')
     map.resize()
     return
   }
+
   map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/dark-v11',
@@ -37,10 +41,11 @@ onActivated(() => {
     ]
   })
 
-  map.on('load', () => {
+  map.on('load', async () => {
+    await mapStore.loadDatabase()
     map.addSource('chos', {
       type: 'geojson',
-      data: db
+      data: mapStore.db
     })
 
     map.addLayer({
@@ -120,14 +125,14 @@ onActivated(() => {
       geolocate.trigger()
     }, 500)
   })
-})
+}
 </script>
 
 <template>
   <div id="map"></div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 #map {
   position: absolute;
   left: 0;
