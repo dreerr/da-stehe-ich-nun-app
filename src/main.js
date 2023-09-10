@@ -12,8 +12,8 @@ const pinia = createPinia()
 app.use(router)
 app.use(pinia)
 app.use(VueMatomo, {
-  host: 'https://palacz.at/analytics/',
-  siteId: 5,
+  host: import.meta.env.VITE_MATOMO_URL,
+  siteId: parseInt(import.meta.env.VITE_MATOMO_ID),
   router: router
 })
 
