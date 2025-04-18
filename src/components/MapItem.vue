@@ -58,7 +58,6 @@ onMounted(async () => {
     </div>
     <div class="images" @click="doContain = !doContain" :class="{ contain: doContain }">
       <div class="inner moon">
-        <!-- <img class="cover" :src="'/' + img" /> -->
         <img
           :src="'/images/' + img"
           v-for="(img, idx) in item.properties.images"
