@@ -11,8 +11,7 @@ let map = null
 let visitedIds = JSON.parse(localStorage.getItem('visitedIds')) || []
 
 console.log(visitedIds)
-mapboxgl.accessToken =
-  'pk.eyJ1IjoiZHJlZXJyIiwiYSI6ImNsZXB6MDhwMzA5ZWYzc3BoczQxMGRiaTYifQ.Slh2tayWO19KkBCqXtFY_g'
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN
 onMounted(() => {
   console.log('onMounted')
   main()
