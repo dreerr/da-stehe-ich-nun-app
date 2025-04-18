@@ -11,11 +11,14 @@ const pinia = createPinia()
 
 app.use(router)
 app.use(pinia)
-app.use(VueMatomo, {
-  host: import.meta.env.VITE_MATOMO_URL,
-  siteId: parseInt(import.meta.env.VITE_MATOMO_ID),
-  router: router
-})
+
+if (import.meta.env.VITE_MATOMO_URL !== '' && import.meta.env.VITE_MATOMO_ID !== '') {
+  app.use(VueMatomo, {
+    host: import.meta.env.VITE_MATOMO_URL,
+    siteId: parseInt(import.meta.env.VITE_MATOMO_ID),
+    router: router
+  })
+}
 
 router.isReady().then(() => {
   app.mount('#app')
