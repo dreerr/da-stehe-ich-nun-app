@@ -1,35 +1,80 @@
-# here-i-am-vue
+# Da stehe ich nun…
 
-This template should help get you started developing with Vue 3 in Vite.
+![Da stehe ich nun…](https://julian.palacz.at/site/assets/files/1473/da_stehe_ich_nun.1300x0.jpg)
 
-## Recommended IDE Setup
+## Project Description
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+"Da stehe ich nun…" is an innovative project that bridges art, technology, and urban space. It draws from a database of public artworks in Vienna, transforming factual data into a detective's immersive monologue. Each database entry is reimagined using an LLM, creating text fragments that form a cohesive narrative. These fragments highlight overlooked details, such as inscriptions, hidden elements, and contextual connections, offering a vivid and detailed perspective on Vienna's public art.
 
-## Customize configuration
+This project explores the creative potential of automation, presenting Vienna's art and urban landscape in a new light through alternative storytelling. Original data is sourced from the [Magistrat Wien (MA7 - Kultur)](https://www.wien.gv.at/kultur/kulturgut/kunstwerke/index.html) and available on [data.gv.at](https://www.data.gv.at/katalog/dataset/stadt-wien_kunstwerkeimffentlichenraumwien).
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+For more information, visit [julian.palacz.at](https://julian.palacz.at/spuren/da-stehe-ich-nun).
 
-## Project Setup
+---
 
-```sh
-npm install
-```
+## How to Run the Project
 
-### Compile and Hot-Reload for Development
+### Prerequisites
 
-```sh
-npm run dev
-```
+- Node.js (v16 or higher)
+- npm or yarn
+- A modern browser
 
-### Compile and Minify for Production
+### Setup Instructions
 
-```sh
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/dreerr/da-stehe-ich-nun-app.git
+   cd da-stehe-ich-nun-app
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Copy the `.env.example` file to `.env` and update the environment variables as needed.
+
+4. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+5. Open the app in your browser:
+   ```
+   http://localhost:5173
+   ```
+
+### Build for Production
+
+To build the project for production, run:
+
+```bash
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+The production-ready files will be in the `dist` directory.
 
-```sh
+### Linting and Formatting
+
+To check for linting issues, run:
+
+```bash
 npm run lint
 ```
+
+To format the code, run:
+
+```bash
+npm run format
+```
+
+---
+
+## Acknowledgments
+
+- Original data provided by Magistrat Wien - MA7 - Kultur.
+- Part of protestFORMEN – Vienna's Urban Art (Judith Fegerl & Günther Friesinger).
